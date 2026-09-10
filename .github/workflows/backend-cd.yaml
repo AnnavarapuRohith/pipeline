@@ -109,3 +109,18 @@ jobs:
           cd k8s
           kustomize edit set image backend=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           kustomize build | kubectl apply -f -
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting for rollout to complete..."
+          kubectl rollout status deployment/backend --timeout=180s
+          echo "Pods:"
+          kubectl get pods -l app=backend -o wide
+          echo "Service (LoadBalancer):"
+          kubectl get svc backend -o wide
+          echo "Backend LoadBalancer URL:"
+          BACKEND_URL=$(kubectl get svc backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "$BACKEND_URL"
+          echo "Testing /movies endpoint..."
+          sleep 30
+          curl -s "http://$BACKEND_URL/movies" || echo "Backend may still be warming up, LoadBalancer DNS can take a few minutes to propagate"

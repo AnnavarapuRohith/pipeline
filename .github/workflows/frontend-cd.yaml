@@ -107,3 +107,15 @@ jobs:
           cd k8s
           kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           kustomize build | kubectl apply -f -
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting for rollout to complete..."
+          kubectl rollout status deployment/frontend --timeout=180s
+          echo "Pods:"
+          kubectl get pods -l app=frontend -o wide
+          echo "Service (LoadBalancer):"
+          kubectl get svc frontend -o wide
+          echo "Frontend LoadBalancer URL:"
+          kubectl get svc frontend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+          echo ""
