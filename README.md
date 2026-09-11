@@ -400,7 +400,7 @@ cd starter/backend/k8s
 # aws eks update-kubeconfig
 
 # Set the image tag to the newer version
-# ℹ️ Don't commit any changes to the manifests that this command introduces
+# Don't commit any changes to the manifests that this command introduces
 kustomize edit set image backend=<ECR_REPO_URL>:<NEW_TAG_HERE>
 
 # Apply the manifests to the cluster
@@ -415,10 +415,10 @@ The CI/CD pipelines have been fully implemented, tested, and verified end-to-end
 
 | Workflow | File | Status |
 |---|---|---|
-| Frontend Continuous Integration | `.github/workflows/frontend-ci.yaml` | ✅ Passing (lint, test, build) |
-| Backend Continuous Integration | `.github/workflows/backend-ci.yaml` | ✅ Passing (lint, test, build) |
-| Frontend Continuous Deployment | `.github/workflows/frontend-cd.yaml` | ✅ Passing (lint, test, build, push to ECR, deploy to EKS) |
-| Backend Continuous Deployment | `.github/workflows/backend-cd.yaml` | ✅ Passing (lint, test, build, push to ECR, deploy to EKS) |
+| Frontend Continuous Integration | `.github/workflows/frontend-ci.yaml` |  Passing (lint, test, build) |
+| Backend Continuous Integration | `.github/workflows/backend-ci.yaml` |  Passing (lint, test, build) |
+| Frontend Continuous Deployment | `.github/workflows/frontend-cd.yaml` |  Passing (lint, test, build, push to ECR, deploy to EKS) |
+| Backend Continuous Deployment | `.github/workflows/backend-cd.yaml` |  Passing (lint, test, build, push to ECR, deploy to EKS) |
 
 Each CD workflow includes a **Verify deployment** step that waits for the Kubernetes rollout to complete and prints the pod status, service details, and LoadBalancer hostname directly into the GitHub Actions logs as proof of a successful deployment.
 
