@@ -407,6 +407,35 @@ kustomize edit set image backend=<ECR_REPO_URL>:<NEW_TAG_HERE>
 kustomize build | kubectl apply -f -
 ```
 
+## Live Verification
+
+The CI/CD pipelines have been fully implemented, tested, and verified end-to-end against a live EKS cluster.
+
+### Pipelines
+
+| Workflow | File | Status |
+|---|---|---|
+| Frontend Continuous Integration | `.github/workflows/frontend-ci.yaml` | ✅ Passing (lint, test, build) |
+| Backend Continuous Integration | `.github/workflows/backend-ci.yaml` | ✅ Passing (lint, test, build) |
+| Frontend Continuous Deployment | `.github/workflows/frontend-cd.yaml` | ✅ Passing (lint, test, build, push to ECR, deploy to EKS) |
+| Backend Continuous Deployment | `.github/workflows/backend-cd.yaml` | ✅ Passing (lint, test, build, push to ECR, deploy to EKS) |
+
+Each CD workflow includes a **Verify deployment** step that waits for the Kubernetes rollout to complete and prints the pod status, service details, and LoadBalancer hostname directly into the GitHub Actions logs as proof of a successful deployment.
+
+### Live URLs (active at time of submission)
+
+- **Frontend application:** http://a32cbd835b6744301beabb59326c1cbd-37948727.us-east-1.elb.amazonaws.com
+- **Backend API (`/movies` endpoint):** http://af4bd4664b32147bd8d3440e0b95c9da-220069056.us-east-1.elb.amazonaws.com/movies
+
+Opening the frontend URL displays the full movie catalog (Top Gun: Maverick, Sonic the Hedgehog, A Quiet Place), fetched live from the backend API running in the same EKS cluster. Opening the backend URL directly returns the raw JSON movie data.
+
+### Screenshots
+
+Screenshots showing the frontend application, the backend API response, the Kubernetes pods running, the LoadBalancer services, and the successful CI/CD workflow runs (including the expanded "Verify deployment" logs) are attached with this submission.
+
+> Note: these AWS resources are running in a time-limited lab sandbox and will be torn down (`terraform destroy`) after this review is complete, to avoid consuming lab credits. If the live URLs above are no longer reachable, please refer to the attached screenshots as the verification record.
+
+
 ## License
 
 [License](LICENSE.md)
